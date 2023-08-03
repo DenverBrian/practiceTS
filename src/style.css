@@ -16,13 +16,40 @@ body {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 1fr 1fr;
 }
+#loginContainer > h1{
+  background-color: bisque;
+}
 
 #loginForm {
   background-color: pink;
   grid-row: 1/3;
 }
 
-#loginForm{
+#loginForm {
   display: flex;
   flex-direction: column;
+}
+
+#registerContainer {
+  margin: auto;
+  height: 300px;
+  width: 600px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr 1fr;
+}
+
+#registerForm {
+  background-color: skyblue;
+  display: flex;
+  flex-direction: column;
+  grid-row: 1/3;
+}
+
+#registerContainer > h1{
+  background-color: bisque;
+  grid-column: 1/2;
+}
+#goToLoginBtn{
+  grid-row: 2/3;
 }

@@ -6,7 +6,7 @@ const emailInput = document.createElement("input");
 const passwordInput = document.createElement("input");
 const loginBtn = document.createElement("button");
 const logo = document.createElement("h1");
-export const signUpBtn = document.createElement("button");
+export const goToRegister = document.createElement("button");
 
 //add to main div
 
@@ -16,7 +16,7 @@ loginForm.appendChild(emailInput);
 loginForm.appendChild(passwordInput);
 loginForm.appendChild(loginBtn);
 loginContainer.appendChild(logo);
-loginContainer.appendChild(signUpBtn);
+loginContainer.appendChild(goToRegister);
 
 //set element id
 loginContainer.setAttribute("id", "loginContainer");
@@ -24,13 +24,13 @@ loginForm.setAttribute("id", "loginForm");
 emailInput.setAttribute("id", "emailInput");
 passwordInput.setAttribute("id", "passwordInput");
 loginBtn.setAttribute("id", "loginBtn");
-signUpBtn.setAttribute("id", "signUpBtn");
+goToRegister.setAttribute("id", "signUpBtn");
 
 //set element text content
 formTitle.innerText = `LOGIN FORM`;
 logo.innerText = `I AM A LOGO`;
 loginBtn.innerText = `LOGIN`;
-signUpBtn.innerText = `SIGN UP`;
+goToRegister.innerText = `GO TO REGISTER`;
 emailInput.placeholder = `ENTER EMAIL`;
 passwordInput.placeholder = `ENTER PASSWORD`;
 
@@ -38,11 +38,15 @@ passwordInput.placeholder = `ENTER PASSWORD`;
 emailInput.type = `email`;
 passwordInput.type = `password`;
 
+//set name
+emailInput.name = `emailLogin`;
+passwordInput.name = `passwordLogin`;
+
 // set required
-emailInput.required = true;
-passwordInput.required = true;
+// emailInput.required = true;
+// passwordInput.required = true;
 
 
-export const createNewlogin =(app:HTMLElement)=>{
+export const showLoginContainer =(app:HTMLElement)=>{
     app.appendChild(loginContainer);
 }
