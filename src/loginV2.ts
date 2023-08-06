@@ -2,14 +2,13 @@
 export const loginContainer = document.createElement("div");
 const loginForm = document.createElement("form");
 const formTitle = document.createElement("h1");
-const emailInput = document.createElement("input");
-const passwordInput = document.createElement("input");
-const loginBtn = document.createElement("button");
+export const emailInput = document.createElement("input");
+export const passwordInput = document.createElement("input");
+export const loginBtn = document.createElement("button");
 const logo = document.createElement("h1");
 export const goToRegister = document.createElement("button");
 
 //add to main div
-
 loginContainer.appendChild(loginForm);
 loginForm.appendChild(formTitle);
 loginForm.appendChild(emailInput);
@@ -46,7 +45,25 @@ passwordInput.name = `passwordLogin`;
 // emailInput.required = true;
 // passwordInput.required = true;
 
+//set element min and max length
+passwordInput.minLength = 5;
+passwordInput.maxLength = 8;
 
-export const showLoginContainer =(app:HTMLElement)=>{
-    app.appendChild(loginContainer);
-}
+//set element disabled true or false
+loginBtn.disabled = true;
+
+export const showLoginContainer = (app: HTMLElement) => {
+  app.appendChild(loginContainer);
+};
+
+export const passwordLenght = () => {
+  let isPasswordValid: boolean;
+  passwordInput.addEventListener("input", (e) => {
+    const emailInputs = e.target as HTMLInputElement;
+    const theInput = emailInputs.value;
+    if (theInput.length > 5) {
+      isPasswordValid = true;
+    }
+    return isPasswordValid;
+  });
+};

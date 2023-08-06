@@ -1,6 +1,20 @@
-import { goToLogin, registerContainer } from "./registerV2";
-import { showLoginContainer, loginContainer, goToRegister } from "./loginV2";
-
+import {
+  goToLogin,
+  registerContainer,
+  labelForEmail,
+  confirmPasswordInput,
+  labelForPassword,
+} from "./registerV2";
+import {
+  showLoginContainer,
+  loginContainer,
+  goToRegister,
+  emailInput,
+  loginBtn,
+  passwordLenght,
+  passwordInput,
+} from "./loginV2";
+import { showWelcome } from "./welcomeDisplay";
 import "./style.css";
 
 const app = document.getElementById("app");
@@ -8,46 +22,130 @@ const app = document.getElementById("app");
 if (app) {
   showLoginContainer(app);
 
-  const loginForm = document.getElementById("loginForm") as HTMLFormElement;
+  let isLoggedIn: boolean = false; // store in local storage
+  console.log(isLoggedIn);
+
+  type userDetails = {
+    emailInput: string;
+    passwordInput: string;
+    nameInput: string;
+  };
+  let isPasswordValid: boolean = false;
+
+  const loginForm = document.getElementById("loginForm") as HTMLFormElement; // get login form
+  passwordInput.addEventListener("input", (e) => {
+    const passwordInputs = e.target as HTMLInputElement;
+    const theInput = passwordInputs.value;
+    console.log(theInput.length);
+    // console.log(isPasswordValid);
+    // if (theInput.length > 5) {
+    //   isPasswordValid = true;
+    // }
+  });
+  emailInput.addEventListener("input", (e) => {
+    // get the inputs per letter
+    const emailInputs = e.target as HTMLInputElement;
+    const theInput = emailInputs.value;
+    if (theInput.includes("@") && theInput.includes(".com")) {
+      loginBtn.disabled = false;
+    } else if (theInput === "") {
+      loginBtn.disabled = true;
+    }
+  });
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const json = localStorage.getItem("form");
-   
-    if (json) {
-      // console.log(json);
-      const storedObj = JSON.parse(json);
-      console.log(`password from local storage: ${storedObj.passwordInput}`);
+    console.log();
+    const users = localStorage.getItem("users"); // get users data from local storage
+    if (users) {
+      const parseUsers = JSON.parse(users);
+      const listOfEmails = parseUsers.map((user: userDetails) => {
+        return user.emailInput;
+      });
+      const listOfPassword = parseUsers.map((user: userDetails) => {
+        return user.passwordInput;
+      });
+
+      const loginFormInputs = new FormData(e.target as HTMLFormElement); //get  login form input data
+      const objectLoginFormInputs = Object.fromEntries(loginFormInputs); // convert to object
+      const { emailLogin, passwordLogin } = objectLoginFormInputs; // get the property value of object
+
+      if (
+        listOfEmails.includes(emailLogin) &&
+        listOfPassword.includes(passwordLogin)
+      ) {
+        isLoggedIn = true;
+        const stringifyObjectLogin = JSON.stringify(objectLoginFormInputs);
+        localStorage.setItem("currentUser", stringifyObjectLogin);
+        app.removeChild(loginContainer);
+        showWelcome(app);
+      } else {
+        alert("wrong password or email");
+      }
+
+      loginForm.reset();
+      // if (isLoggedIn === true) {
+      //   showWelcome(app);
+      //   app.removeChild(loginContainer);
+      // }
     }
-    
-    
-    const fd = new FormData(e.target as HTMLFormElement); //
-    const obj = Object.fromEntries(fd); //convert array into an object
-    // const objStringify = JSON.stringify(obj);
-    console.log(`passwrod from login page: ${obj.passwordLogin}`);
   });
 
-    goToRegister.onclick = () => {
+  goToRegister.onclick = () => {
     app.removeChild(loginContainer);
     app.appendChild(registerContainer);
 
     const registerForm = document.getElementById(
       "registerForm"
-    ) as HTMLFormElement;
+    ) as HTMLFormElement; //get register form
+    let emailExist: boolean = false;
+    let isPasswordCorrect: boolean = false;
 
+    // let confirmPassword:string;
     registerForm?.addEventListener("submit", (e) => {
       e.preventDefault();
+      console.log(confirmPasswordInput.value);
+      const registerInputs = new FormData(e.target as HTMLFormElement); //get values from register form
+      const objectifyRegisterInputs = Object.fromEntries(registerInputs); //convert register form value into an object
+      const { emailInput, passwordInput } = objectifyRegisterInputs;
 
-      const fd = new FormData(e.target   as HTMLFormElement); //
-      const obj = Object.fromEntries(fd); //convert array into an object
-      const objStringify = JSON.stringify(obj);
-      localStorage.setItem("form", objStringify);
+      const usersFromStorage = localStorage.getItem("users"); // get array of users in local storage
+      const users: object[] = [];
 
-      // const json = localStorage.getItem("form");
-      // if (json) {
-      //   console.log(json);
-      //   const storedObj = JSON.parse(json);
-      //   console.log(storedObj)
-      // }
+      if (usersFromStorage) {
+        const parseUsers = JSON.parse(usersFromStorage); // mke the data from storage object with key value pairs
+        console.log(parseUsers);
+        const emailList = parseUsers.map((emails: userDetails) => {
+          //get value of specific attribute in array of objects
+          return emails.emailInput;
+        });
+        console.log(`email list`);
+        console.log(emailList);
+        if (emailList.includes(emailInput)) {
+          emailExist = true;
+          labelForEmail.textContent = `The email already Exist!`;
+        } else {
+          emailExist = false;
+          labelForEmail.textContent = ` `;
+        }
+        if (confirmPasswordInput.value !== passwordInput) {
+          labelForPassword.textContent = `Password dont match!`;
+          // isPasswordCorrect = false;
+        } else {
+          isPasswordCorrect = true;
+          labelForPassword.textContent = ` `;
+        }
+
+        for (let i = 0; i < parseUsers.length; i++) {
+          users.push(parseUsers[i]);
+        }
+      }
+      if (emailExist !== true && isPasswordCorrect === true) {
+        users.push(objectifyRegisterInputs);
+      }
+      const stringifyUsers = JSON.stringify(users);
+      localStorage.setItem("users", stringifyUsers);
+      // emailExist = false;
+      // registerForm.reset();
     });
   };
 
@@ -56,3 +154,8 @@ if (app) {
     app.appendChild(loginContainer);
   };
 }
+
+//if user logged in store it in the local storage store it as current user
+//after login
+//before displaying the email get the value of email in the local storage
+// display welcome page with the email of the logged user
