@@ -65,7 +65,7 @@ if (app) {
           passwordLogin === parseUsers[i].passwordInput
         ) {
           isLoggedIn = true;
-          const stringifyObjectLogin = JSON.stringify(objectLoginFormInputs);
+          const stringifyObjectLogin = JSON.stringify(parseUsers[i]);
           localStorage.setItem("currentUser", stringifyObjectLogin);
           app.removeChild(loginContainer);
           showWelcome(app);

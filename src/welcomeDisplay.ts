@@ -22,9 +22,9 @@ export const showWelcome = (main: HTMLElement) => {
 
   if (currentUser) {
     const parseCurrentUser = JSON.parse(currentUser); // convertn string to object
-    const { emailLogin } = parseCurrentUser; // get email
+    const { nameInput } = parseCurrentUser; // get name
 
-    message.innerText = `welcome ${emailLogin}`; //di
+    message.innerText = `welcome ${nameInput}`; //di
 
     main.appendChild(messageContainer);
 
