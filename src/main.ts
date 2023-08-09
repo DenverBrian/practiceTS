@@ -33,54 +33,50 @@ if (app) {
   let isPasswordValid: boolean = false;
 
   const loginForm = document.getElementById("loginForm") as HTMLFormElement; // get login form
-  passwordInput.addEventListener("input", (e) => {
-    const passwordInputs = e.target as HTMLInputElement;
-    const theInput = passwordInputs.value;
-    console.log(theInput.length);
-    // console.log(isPasswordValid);
-    // if (theInput.length > 5) {
-    //   isPasswordValid = true;
-    // }
-  });
-  emailInput.addEventListener("input", (e) => {
-    // get the inputs per letter
-    const emailInputs = e.target as HTMLInputElement;
-    const theInput = emailInputs.value;
-    if (theInput.includes("@") && theInput.includes(".com")) {
-      loginBtn.disabled = false;
-    } else if (theInput === "") {
-      loginBtn.disabled = true;
-    }
-  });
+  // emailInput.addEventListener("input", (e) => {
+  //   // get the inputs per letter
+  //   const emailInputs = e.target as HTMLInputElement;
+  //   const theInput = emailInputs.value;
+  //   if (theInput.includes("@") && theInput.includes(".com")) {
+  //     loginBtn.disabled = false;
+  //   } else if (theInput === "") {
+  //     loginBtn.disabled = true;
+  //   }
+  // });
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    console.log();
+
+    const loginFormInputs = new FormData(e.target as HTMLFormElement); //get  login form input data
+    const objectLoginFormInputs = Object.fromEntries(loginFormInputs); // convert to object
+    // console.log(objectLoginFormInputs);
+    const { emailLogin, passwordLogin } = objectLoginFormInputs; // get the property value of object
+
     const users = localStorage.getItem("users"); // get users data from local storage
     if (users) {
       const parseUsers = JSON.parse(users);
-      const listOfEmails = parseUsers.map((user: userDetails) => {
-        return user.emailInput;
-      });
-      const listOfPassword = parseUsers.map((user: userDetails) => {
-        return user.passwordInput;
-      });
+      // console.log(parseUsers);
+      // const objects = parseUsers.filter((accounts: userDetails) => {
+      //   return accounts
+      // });
 
-      const loginFormInputs = new FormData(e.target as HTMLFormElement); //get  login form input data
-      const objectLoginFormInputs = Object.fromEntries(loginFormInputs); // convert to object
-      const { emailLogin, passwordLogin } = objectLoginFormInputs; // get the property value of object
-
-      if (
-        listOfEmails.includes(emailLogin) &&
-        listOfPassword.includes(passwordLogin)
-      ) {
-        isLoggedIn = true;
-        const stringifyObjectLogin = JSON.stringify(objectLoginFormInputs);
-        localStorage.setItem("currentUser", stringifyObjectLogin);
-        app.removeChild(loginContainer);
-        showWelcome(app);
-      } else {
-        alert("wrong password or email");
+      for (let i = 0; i < parseUsers.length; i++) {
+        if (
+          emailLogin === parseUsers[i].emailInput &&
+          passwordLogin === parseUsers[i].passwordInput
+        ) {
+          isLoggedIn = true;
+          const stringifyObjectLogin = JSON.stringify(objectLoginFormInputs);
+          localStorage.setItem("currentUser", stringifyObjectLogin);
+          app.removeChild(loginContainer);
+          showWelcome(app);
+          break;
+        } else {
+          console.log("invalid Input");
+        }
       }
+      // console.log(objects)
+
+      // alert("wrong password or email");
 
       loginForm.reset();
       // if (isLoggedIn === true) {

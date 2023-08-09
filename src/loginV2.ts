@@ -50,7 +50,7 @@ passwordInput.minLength = 5;
 passwordInput.maxLength = 8;
 
 //set element disabled true or false
-loginBtn.disabled = true;
+loginBtn.disabled = false;
 
 export const showLoginContainer = (app: HTMLElement) => {
   app.appendChild(loginContainer);
